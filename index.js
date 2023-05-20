@@ -9,6 +9,8 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// database
+
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.phenf1e.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -24,7 +26,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const toyDatabase = client.db("toyDatabase");
     const toyCollection = toyDatabase.collection("toys");
@@ -50,7 +52,7 @@ async function run() {
       if (
         req.params.category == "DC" ||
         req.params.category == "Marvel" ||
-        req.params.category == "Star Wars"
+        req.params.category == "Star-wars"
       ) {
         const result = await toyCollection
           .find({ sub_category: req.params.category })
@@ -72,9 +74,9 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  res.send("crud server is running");
+  res.send("imperial toys server is running");
 });
 
 app.listen(port, () => {
-  console.log("this crud server is running on", port);
+  console.log("this toyshop server is running on", port);
 });
