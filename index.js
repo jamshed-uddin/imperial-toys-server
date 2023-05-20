@@ -30,7 +30,7 @@ async function run() {
     const toyCollection = toyDatabase.collection("toys");
 
     // create toy info
-    app.post("/allToys", async (req, res) => {
+    app.post("/alltoys", async (req, res) => {
       const user = req.body;
       console.log("new user:", user);
       const result = await toyCollection.insertOne(user);
@@ -38,10 +38,25 @@ async function run() {
     });
 
     // get all toy info
-    app.get("/allToys", async (req, res) => {
+    app.get("/alltoys", async (req, res) => {
       const cursor = toyCollection.find();
       const result = await cursor.toArray();
       res.send(result);
+    });
+
+    // categorywise filter
+
+    app.get("/alltoys/:category", async (req, res) => {
+      if (
+        req.params.category == "DC" ||
+        req.params.category == "Marvel" ||
+        req.params.category == "Star Wars"
+      ) {
+        const result = await toyCollection
+          .find({ sub_category: req.params.category })
+          .toArray();
+        return res.send(result);
+      }
     });
 
     // Send a ping to confirm a successful connection
