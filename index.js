@@ -37,30 +37,11 @@ async function run() {
     const toyDatabase = client.db("toyDatabase");
     const toyCollection = toyDatabase.collection("toys");
 
-    const indexKeys = { toy_name: 1, sub_category: 1 };
-    const indexOptions = { name: "nameCategory" };
-    const result = await toyCollection.createIndex(indexKeys, indexOptions);
-
     // create toy info
     app.post("/alltoys", async (req, res) => {
       const newToy = req.body;
       console.log("new newToy:", newToy);
       const result = await toyCollection.insertOne(newToy);
-      res.send(result);
-    });
-
-    // search option
-
-    app.get("/search/:text", async (req, res) => {
-      const searchText = req.params.text;
-      const result = await toyCollection
-        .find({
-          $or: [
-            { toy_name: { $regex: text, $options: "i" } },
-            { sub_category: { $regex: text, $options: "i" } },
-          ],
-        })
-        .toArray();
       res.send(result);
     });
 
